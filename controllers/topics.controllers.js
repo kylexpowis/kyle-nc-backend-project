@@ -1,7 +1,9 @@
 const { selectTopics } = require("../models/topics.model");
+const endPoints = require ("../endpoints.json");
+
+
 
 exports.getTopics = (req, res, next) => {
-    console.log("HELLO FROM CONTROLLER!!")
     selectTopics()
     .then((topics) => {
         res.status(200).send({topics});
@@ -10,4 +12,8 @@ exports.getTopics = (req, res, next) => {
         console.log(err)
         next(err)
     })
+};
+
+exports.getApi = (req, res) => {
+    res.status(200).send(endPoints);
 };
