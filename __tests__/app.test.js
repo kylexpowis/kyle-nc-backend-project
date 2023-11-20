@@ -15,6 +15,7 @@ describe("/api/topics", () => {
         .expect(200)
         .then(({body}) => {
             const { topics } = body;
+            expect(topics).toHaveLength(3)
             topics.forEach((topic) => {
                 expect(topic).toMatchObject({
                     description: expect.any(String),
