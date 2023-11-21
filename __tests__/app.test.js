@@ -30,7 +30,7 @@ describe("/api", () => {
         .get("/api")
         .expect(200)
         .then(({ body }) => {
-            expect(body).toEqual(endPoints);
+            expect(body).toEqual({data: endPoints});
         });
     });
 });
