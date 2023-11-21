@@ -62,7 +62,7 @@ describe("/api/articles/:article_id", () => {
             expect(body.msg).toBe("Article Not Found");
         })
     })
-    test("GET: 400 responds with an error message of 'Bad Request' if the user enters an invalid sort_by field", () => {
+    test("GET: 400 responds with an error message of 'Bad Request' if the user enters an invalid field", () => {
         return request(app)
           .get("/api/articles/banana")
           .expect(400)
