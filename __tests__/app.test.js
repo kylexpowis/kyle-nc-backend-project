@@ -4,6 +4,7 @@ const data = require("../db/data/test-data/index");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const endPoints = require("../endpoints.json");
+const sorted = require("jest-sorted");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -71,3 +72,34 @@ describe("/api/articles/:article_id", () => {
           });
     });
 });
+describe("/api/articles/:article_id/comments", () => {
+    test("GET: 200 responds with an array of comments for the given article_id", () => {
+        return request(app)
+        .get(`/api/articles/1/comments`)
+        .expect(200)
+        .then(({ body }) => {
+            const { comments } = body;
+            expect(comments).toBeInstanceOf(Array);
+            comments.forEach((comment) => {
+                expect(comment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    article_id: 1
+                })
+            })
+        })
+    })
+    test("GET:200 responds with all treasures sorted by comments with the most recent comment first", () => {
+        return request(app)
+          .get("/api/articles/1/comments")
+          .expect(200)
+          .then(({ body }) => {
+            const { comments } = body;
+            expect(comments).toHaveLength(11);
+            expect(comments).toBeSortedBy("created_at", {descending: true });
+          });
+      });
+})
