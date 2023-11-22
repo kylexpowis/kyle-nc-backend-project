@@ -4,6 +4,7 @@ const data = require("../db/data/test-data/index");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const endPoints = require("../endpoints.json");
+const sorted = require("jest-sorted")
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -42,6 +43,7 @@ describe("/api/articles", () => {
         .expect(200)
         .then(({ body }) => {
           const { articles } = body;
+          expect(articles).toHaveLength(13);
           expect(articles).toBeInstanceOf(Array);
           articles.forEach((article) => {
             expect(article).toMatchObject({
@@ -56,5 +58,15 @@ describe("/api/articles", () => {
             })
         })
     })
-})
+});  
+    test("GET: 200 responds with all articles sorted by created_at in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toHaveLength(13);
+        expect(articles).toBeSortedBy(`created_at`, { descending: true });
+      });
+  });
 });
