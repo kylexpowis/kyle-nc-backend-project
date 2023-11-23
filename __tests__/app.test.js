@@ -4,6 +4,7 @@ const data = require("../db/data/test-data/index");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const endPoints = require("../endpoints.json");
+const sorted = require("jest-sorted")
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -35,6 +36,42 @@ describe("/api", () => {
         });
     });
 });
+
+describe("/api/articles", () => {
+    test("GET: 200 sends an array of article objects", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(articles).toHaveLength(13);
+          expect(articles).toBeInstanceOf(Array);
+          articles.forEach((article) => {
+            expect(article).toMatchObject({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+              comment_count: expect.any(String)
+            })
+        })
+    })
+});  
+    test("GET: 200 responds with all articles sorted by created_at in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toHaveLength(13);
+        expect(articles).toBeSortedBy(`created_at`, { descending: true });
+      });
+  });
+});
+
 describe("/api/articles/:article_id", () => {
     test("GET: 200 sends an article object for the specified article ID", () => {
         const expectedArticleId = 1
@@ -71,3 +108,4 @@ describe("/api/articles/:article_id", () => {
           });
     });
 });
+

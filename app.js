@@ -1,12 +1,16 @@
 const express = require("express")
-const { getTopics, getApi } = require("./controllers/topics.controllers");
-const { selectArticlebyId } = require("./controllers/articles.controllers");
+
+const { getTopics, getApi  } = require("./controllers/topics.controllers");
+const { getArticles, selectArticlebyId } = require("./controllers/articles.controllers")
 const endPoints = require("./endpoints.json");
 const app = express();
 
 app.get("/api", getApi);
 
 app.get("/api/topics", getTopics);
+
+
+app.get("/api/articles",  getArticles);
 
 app.get("/api/articles/:article_id", selectArticlebyId)
 
@@ -19,5 +23,6 @@ app.use((err, req, res, next) => {
     }
     res.status(status).send({ msg: message });
 })
+
 
 module.exports = app;
