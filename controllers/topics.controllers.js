@@ -9,7 +9,6 @@ exports.getTopics = (req, res, next) => {
         res.status(200).send({topics});
     })
     .catch((err) => {
-        console.log(err)
         next(err)
     })
 };
@@ -17,4 +16,5 @@ exports.getTopics = (req, res, next) => {
 exports.getApi = (req, res) => {
     res.status(200).send({data: endPoints});
 };
+
 

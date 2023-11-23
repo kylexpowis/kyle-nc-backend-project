@@ -1,6 +1,6 @@
 const express = require("express")
 const { getTopics, getApi } = require("./controllers/topics.controllers");
-const { selectArticlebyId } = require("./controllers/articles.controllers");
+const { selectArticlebyId, getCommentsByArticleId } = require("./controllers/articles.controllers");
 const endPoints = require("./endpoints.json");
 const app = express();
 
@@ -9,6 +9,8 @@ app.get("/api", getApi);
 app.get("/api/topics", getTopics);
 
 app.get("/api/articles/:article_id", selectArticlebyId)
+
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
 
 app.use((err, req, res, next) => {
     console.log(err);
