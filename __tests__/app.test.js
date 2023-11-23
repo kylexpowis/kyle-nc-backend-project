@@ -92,7 +92,7 @@ describe("/api/articles/:article_id/comments", () => {
             })
         })
     })
-    test("GET:200 responds with all treasures sorted by comments with the most recent comment first", () => {
+    test("GET:200 responds with all comments sorted by comments with the most recent comment first", () => {
         return request(app)
           .get("/api/articles/1/comments")
           .expect(200)
@@ -102,4 +102,20 @@ describe("/api/articles/:article_id/comments", () => {
             expect(comments).toBeSortedBy("created_at", {descending: true });
           });
       });
+    test("GET: 404 responds with an error message if the article ID doesnt exist", () => {
+        return request(app)
+        .get("/api/articles/200/comments")
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Article Not Found")
+        })
+    });
+    test("GET: 400 responds with an error message if the article ID is invalid", () => {
+        return request(app)
+        .get("/api/articles/invalidarticletest")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad Request Invalid Article ID")
+        })
+    });
 })

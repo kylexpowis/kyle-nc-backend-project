@@ -12,7 +12,7 @@ exports.selectArticlebyId = (article_id) => {
 }
 
 exports.selectCommentsByArticleId = (article_id) => {
-    let queryString = `SELECT comment_id,
+    const queryString = `SELECT comment_id,
     votes,
     created_at,
     author,
