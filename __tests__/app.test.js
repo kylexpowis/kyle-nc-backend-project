@@ -71,3 +71,26 @@ describe("/api/articles/:article_id", () => {
           });
     });
 });
+
+
+describe("POST /api/articles/:article_id/comment", () => {
+    test("POST: 201 responds with posted comment", () => {
+    const newComment = {
+        username: "butter_bridge", body: "test comment"};
+    return request(app)
+        .post(`/api/articles/1/comments`)
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+        const { postedComment } = body;
+        expect(postedComment).toMatchObject({
+            comment_id: expect.any(Number),
+            article_id: expect.any(Number),
+            author: "butter_bridge",
+            body: "test comment",
+            created_at: expect.any(String),
+            votes: expect.any(Number)
+        })
+    })
+    })
+})

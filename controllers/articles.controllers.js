@@ -1,4 +1,4 @@
-const { selectArticlebyId } = require("../models/articles.models");
+const { selectArticlebyId, postComment } = require("../models/articles.models");
 const endPoints = require ("../endpoints.json");
 
 exports.selectArticlebyId = (req, res, next) => {
@@ -8,7 +8,20 @@ exports.selectArticlebyId = (req, res, next) => {
         res.status(200).send({ article });
     })
     .catch((err) => {
-        console.log(err);
         next(err)
     });
 };
+
+exports.postComment = (req, res, next) => {
+    const { article_id } = req.params;
+    const passedComment = req.body;
+    console.log(article_id, passedComment, ("article ID & PASSSSED COMMENT"))
+    postComment(article_id, passedComment)
+        .then((postedComment) => {
+            res.status(201).send({postedComment});
+        })
+        .catch((err) => {
+            console.log(err, "<-------- ERROR");
+            next(err);
+})
+}
