@@ -1,6 +1,6 @@
+
 const { selectArticlebyId, selectArticles } = require("../models/articles.models");
 const endPoints = require ("../endpoints.json");
-
 exports.selectArticlebyId = (req, res, next) => {
     const { article_id } = req.params;
     selectArticlebyId(article_id)
@@ -12,7 +12,6 @@ exports.selectArticlebyId = (req, res, next) => {
         next(err)
     });
 };
-
 exports.getArticles = (req, res, next) => {
     selectArticles()
     .then((articles) => {
