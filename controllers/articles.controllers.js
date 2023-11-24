@@ -22,7 +22,6 @@ exports.postComment = (req, res, next) => {
 
     postComment(article_id, passedComment)
         .then((postedComment) => {
-            console.log(postedComment, "POSTED COMMENT")
             res.status(201).send({postedComment});
         })
         .catch((err) => {

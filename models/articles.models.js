@@ -12,6 +12,7 @@ exports.selectArticlebyId = (article_id) => {
 }
 
 exports.postComment = (article_id, passedComment) => {
+    console.log( article_id )
     const { username, body } = passedComment
     return db.query(`INSERT INTO comments (article_id, author, body)
     VALUES ($1, $2, $3)
