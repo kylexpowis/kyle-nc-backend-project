@@ -1,4 +1,5 @@
-const { selectArticlebyId, selectCommentsByArticleId, selectArticles, updateArticleVote } = require("../models/articles.models");
+const { selectArticlebyId, selectCommentsByArticleId, selectArticles, updateArticleVote, postComment } = require("../models/articles.models");
+
 const endPoints = require ("../endpoints.json");
 
 exports.selectArticlebyId = (req, res, next) => {
@@ -8,10 +9,25 @@ exports.selectArticlebyId = (req, res, next) => {
         res.status(200).send({ article });
     })
     .catch((err) => {
-        console.log(err);
         next(err)
     });
 };
+
+exports.postComment = (req, res, next) => {
+    const { article_id } = req.params;
+    const passedComment = req.body;
+    
+        if (!passedComment.username || !passedComment.body) {
+            return res.status(400).send({ msg: "Bad Request"})
+        }
+
+    postComment(article_id, passedComment)
+        .then((postedComment) => {
+            res.status(201).send({postedComment});
+        })
+        .catch((err) => {
+            next(err);
+})}
 
 exports.getCommentsByArticleId = (req, res, next) => {
     const { article_id } = req.params;
