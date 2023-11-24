@@ -68,7 +68,7 @@ describe("/api/articles/:article_id", () => {
           .get("/api/articles/banana")
           .expect(400)
           .then(({ body }) => {
-            expect(body.msg).toBe("Bad Request Invalid Article ID");
+            expect(body.msg).toBe("Bad Request");
           });
     });
 });
@@ -115,7 +115,7 @@ describe("/api/articles/:article_id/comments", () => {
         .get("/api/articles/invalidarticletest")
         .expect(400)
         .then(({ body }) => {
-            expect(body.msg).toBe("Bad Request Invalid Article ID")
+            expect(body.msg).toBe("Bad Request")
         })
     });
 })
@@ -142,3 +142,18 @@ describe("/api/articles", () => {
     })
 })
 });
+describe("DELETE: /api/comments/:comment_id", () => {
+    test('DELETE: 204 deletes the comment', () => {
+        return request(app)
+        .delete("/api/comments/1")
+        .expect(204);
+    });
+    test('DELETE: 404 sends an error if the comment ID isnt found', () => {
+        return request(app)
+        .delete("/api/comments/700")
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Not Found")
+        })
+    })
+})
