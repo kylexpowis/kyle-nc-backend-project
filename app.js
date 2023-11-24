@@ -18,12 +18,16 @@ app.get("/api/articles",  getArticles);
 app.patch("/api/articles/:article_id", updateArticleVotesById)
 
 app.use((err, req, res, next) => {
-    console.log(err);
     const status = err.status || 500;
     const message = err.msg || "Internal Server Error";
     if (err.code === "22P02") {
-        res.status(400).send({ msg: "Bad Request"})
-    }
+        res.status(400).send({ msg: "Bad Request" })
+    } else if (err.code === "23502") {
+            res.status(400).send({ msg: "Bad Request Body" })
+        }
+        else if (err.code === "23503") {
+            res.status(404).send({ msg: "Not Found"})
+        }
     res.status(status).send({ msg: message });
 })
 module.exports = app;

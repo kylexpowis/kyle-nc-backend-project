@@ -184,10 +184,21 @@ describe("/api/articles/:article_id", () => {
     test("PATCH: 200 returns original response if inc_votes is missing", () => {
         return request(app)
         .patch("/api/articles/1")
-        .send({ inc_votes: 0})
-        .expect(({ body }) => {
+        .send({ inc_votes: 0 })
+        .expect(200)
+        .then(({ body }) => {
+            console.log(body)
             const {article} = body;
             expect(article.votes).toBe(100)
         })
     })
-})
+    test('PATCH: 400 responds with an error if body is not a number', () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send( { inc_votes: "10" })
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad Request")
+        })
+    });     
+});
