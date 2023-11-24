@@ -22,7 +22,7 @@ app.use((err, req, res, next) => {
     const status = err.status || 500;
     const message = err.msg || "Internal Server Error";
     if (err.code === "22P02") {
-        res.status(400).send({ msg: "Bad Request Invalid Article ID"})
+        res.status(400).send({ msg: "Bad Request"})
     }
     res.status(status).send({ msg: message });
 })

@@ -69,7 +69,7 @@ describe("/api/articles/:article_id", () => {
           .get("/api/articles/banana")
           .expect(400)
           .then(({ body }) => {
-            expect(body.msg).toBe("Bad Request Invalid Article ID");
+            expect(body.msg).toBe("Bad Request");
           });
     });
 });
@@ -116,7 +116,7 @@ describe("/api/articles/:article_id/comments", () => {
         .get("/api/articles/invalidarticletest")
         .expect(400)
         .then(({ body }) => {
-            expect(body.msg).toBe("Bad Request Invalid Article ID")
+            expect(body.msg).toBe("Bad Request")
         })
     });
 })
@@ -178,7 +178,16 @@ describe("/api/articles/:article_id", () => {
         .patch("/api/articles/invalidarticletest")
         .expect(400)
         .then(({ body }) => {
-            expect(body.msg).toBe("Bad Request Invalid Article ID")
+            expect(body.msg).toBe("Bad Request")
         })
     });
+    test("PATCH: 200 returns original response if inc_votes is missing", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 0})
+        .expect(({ body }) => {
+            const {article} = body;
+            expect(article.votes).toBe(100)
+        })
+    })
 })
