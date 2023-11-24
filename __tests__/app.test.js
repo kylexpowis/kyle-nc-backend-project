@@ -68,10 +68,105 @@ describe("/api/articles/:article_id", () => {
           .get("/api/articles/banana")
           .expect(400)
           .then(({ body }) => {
-            expect(body.msg).toBe("Bad Request Invalid Article ID");
+            expect(body.msg).toBe("Bad Request");
           });
     });
 });
+
+describe("POST /api/articles/:article_id/comment", () => {
+    test("POST: 201 responds with posted comment", () => {
+    const newComment = {
+        username: "butter_bridge", body: "test comment"};
+    return request(app)
+        .post(`/api/articles/1/comments`)
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+        const { postedComment } = body;
+        expect(postedComment).toMatchObject({
+            comment_id: expect.any(Number),
+            article_id: expect.any(Number),
+            author: "butter_bridge",
+            body: "test comment",
+            created_at: expect.any(String),
+            votes: expect.any(Number)
+        })
+    })
+    })
+    test("POST: 404 responds with an error message of 'Not Found' if passed invalid user", () => {
+        const newComment = { 
+            username: "billybob", body: "test comment"
+        }
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Not Found");
+          });
+    });
+    test("POST: 400 responds with an error message of 'Bad Request' if passed no comment", () => {
+        const newComment = { 
+            username: "butter_bridge",
+        }
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Bad Request");
+          });
+    })
+    test("POST: 201 responds with posted comment, ignoring unnecessary properties", () => {
+        const newComment = {
+            username: "butter_bridge",
+            body: "test comment",
+            extraproperty: "test"
+        };
+        return request(app)
+            .post(`/api/articles/1/comments`)
+            .send(newComment)
+            .expect(201)
+            .then(({ body }) => {
+                const { postedComment } = body;
+                expect(postedComment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    article_id: expect.any(Number),
+                    author: "butter_bridge",
+                    body: "test comment",
+                    created_at: expect.any(String),
+                    votes: expect.any(Number)
+            }); 
+        });
+    })
+    test("POST: 404 responds with an error message of 'Bad Request' if ID doesnt exist", () => {
+        const newComment = {
+            username: "butter_bridge",
+            body: "test comment"
+        };
+        return request(app)
+          .post("/api/articles/300/comments")
+          .send(newComment)
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Not Found");
+          });
+    });
+    test("POST: 400 responds with an error message of 'Not Found' if the article ID is invalid", () => {
+        const newComment = {
+            username: "butter_bridge",
+            body: "test comment"
+        };
+        return request(app)
+            .post("/api/articles/banana/comments")
+            .send(newComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Bad Request");
+            });
+    });
+})
+
 describe("/api/articles/:article_id/comments", () => {
     test("GET: 200 responds with an array of comments for the given article_id", () => {
         return request(app)
@@ -142,3 +237,4 @@ describe("/api/articles", () => {
     })
 })
 });
+
