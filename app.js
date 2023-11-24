@@ -1,8 +1,11 @@
 const express = require("express")
 const { getTopics, getApi } = require("./controllers/topics.controllers");
-const { selectArticlebyId, getCommentsByArticleId, getArticles, postComment } = require("./controllers/articles.controllers");
+
+const { selectArticlebyId, getCommentsByArticleId, getArticles, updateArticleVotesById, postComment } = require("./controllers/articles.controllers");
+
 const endPoints = require("./endpoints.json");
 const app = express();
+app.use(express.json());
 
 app.use(express.json());
 
@@ -17,6 +20,10 @@ app.post("/api/articles/:article_id/comments", postComment)
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
 
+app.get("/api/articles",  getArticles);
+
+app.patch("/api/articles/:article_id", updateArticleVotesById)
+
 app.use((err, req, res, next) => {
     const status = err.status || 500;
     const message = err.msg || "Internal Server Error";
@@ -30,6 +37,4 @@ app.use((err, req, res, next) => {
         }
     res.status(status).send({ msg: message });
 })
-app.get("/api/articles",  getArticles);
-
 module.exports = app;

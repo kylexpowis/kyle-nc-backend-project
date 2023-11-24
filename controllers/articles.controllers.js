@@ -1,4 +1,4 @@
-const { selectArticlebyId, selectCommentsByArticleId, selectArticles, postComment } = require("../models/articles.models");
+const { selectArticlebyId, selectCommentsByArticleId, selectArticles, updateArticleVote, postComment } = require("../models/articles.models");
 
 const endPoints = require ("../endpoints.json");
 
@@ -53,3 +53,16 @@ exports.getArticles = (req, res, next) => {
         next(err)
     });
 };
+
+exports.updateArticleVotesById = (req, res, next) => {
+    const { article_id } = req.params;
+    const { inc_votes } = req.body;
+
+    updateArticleVote(article_id, inc_votes)
+      .then((updatedArticle) => {
+        res.status(200).send({ article: updatedArticle });
+      })
+      .catch((err) => {
+        next(err);
+      });
+  };

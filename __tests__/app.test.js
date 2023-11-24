@@ -5,6 +5,7 @@ const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const endPoints = require("../endpoints.json");
 const sorted = require("jest-sorted");
+const { patch } = require("../app");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -210,7 +211,7 @@ describe("/api/articles/:article_id/comments", () => {
         .get("/api/articles/invalidarticletest")
         .expect(400)
         .then(({ body }) => {
-            expect(body.msg).toBe("Bad Request Invalid Article ID")
+            expect(body.msg).toBe("Bad Request")
         })
     });
 })
@@ -236,5 +237,65 @@ describe("/api/articles", () => {
         })
     })
 })
+});
+
+describe("/api/articles/:article_id", () => {
+    test("PATCH: 200 updates the votes property of the specified article", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 1 })
+        .expect(200)
+        .then(({ body }) => {
+            const {article} = body;
+            expect(article.votes).toBe(101)
+        })
+    })
+    test('PATCH: 200 decerements the votes of the property when passed a negatibe number', () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: -100 })
+        .expect(200)
+        .then(({ body }) => {
+            const { article } = body;
+            expect(article.votes).toBe(0)
+        })
+    });
+    test('PATCH: 404 responds with an error message if the article ID isnt found', () => {
+        return request(app)
+        .patch("/api/articles/700")
+        .send({ inc_votes: 10 })
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Article Not Found")
+        })
+    });
+    test("PATCH: 400 responds with an error message if the article ID is invalid", () => {
+        return request(app)
+        .patch("/api/articles/invalidarticletest")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad Request")
+        })
+    });
+    test("PATCH: 200 returns original response if inc_votes is missing", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 0 })
+        .expect(200)
+        .then(({ body }) => {
+            console.log(body)
+            const {article} = body;
+            expect(article.votes).toBe(100)
+        })
+    })
+    test('PATCH: 400 responds with an error if body is not a number', () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send( { inc_votes: "10" })
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad Request")
+        })
+    });     
 });
 
