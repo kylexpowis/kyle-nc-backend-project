@@ -1,6 +1,6 @@
 const express = require("express")
 const { getTopics, getApi } = require("./controllers/topics.controllers");
-const { selectArticlebyId, postComment } = require("./controllers/articles.controllers");
+const { selectArticlebyId, getCommentsByArticleId, getArticles, postComment } = require("./controllers/articles.controllers");
 const endPoints = require("./endpoints.json");
 const app = express();
 
@@ -12,7 +12,10 @@ app.get("/api/topics", getTopics);
 
 app.get("/api/articles/:article_id", selectArticlebyId)
 
+
 app.post("/api/articles/:article_id/comments", postComment)
+
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
 
 app.use((err, req, res, next) => {
     const status = err.status || 500;
@@ -27,5 +30,6 @@ app.use((err, req, res, next) => {
         }
     res.status(status).send({ msg: message });
 })
+app.get("/api/articles",  getArticles);
 
 module.exports = app;
