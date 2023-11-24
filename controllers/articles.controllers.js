@@ -15,13 +15,16 @@ exports.selectArticlebyId = (req, res, next) => {
 exports.postComment = (req, res, next) => {
     const { article_id } = req.params;
     const passedComment = req.body;
-    console.log(article_id, passedComment, ("article ID & PASSSSED COMMENT"))
+    
+        if (!passedComment.username || !passedComment.body) {
+            return res.status(400).send({ msg: "Bad Request"})
+        }
+
     postComment(article_id, passedComment)
         .then((postedComment) => {
+            console.log(postedComment, "POSTED COMMENT")
             res.status(201).send({postedComment});
         })
         .catch((err) => {
-            console.log(err, "<-------- ERROR");
             next(err);
-})
-}
+})}

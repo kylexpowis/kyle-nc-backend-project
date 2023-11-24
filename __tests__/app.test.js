@@ -93,16 +93,16 @@ describe("POST /api/articles/:article_id/comment", () => {
         })
     })
     })
-    test("POST: 400 responds with an error message of 'Bad Request' if passed invalid user", () => {
+    test("POST: 404 responds with an error message of 'Not Found' if passed invalid user", () => {
         const newComment = { 
-            username: "billybob",
+            username: "billybob", body: "test comment"
         }
         return request(app)
         .post("/api/articles/1/comments")
         .send(newComment)
-          .expect(400)
+          .expect(404)
           .then(({ body }) => {
-            expect(body.msg).toBe("Bad Request Body");
+            expect(body.msg).toBe("Not Found");
           });
     });
     test("POST: 400 responds with an error message of 'Bad Request' if passed no comment", () => {
@@ -114,7 +114,7 @@ describe("POST /api/articles/:article_id/comment", () => {
         .send(newComment)
           .expect(400)
           .then(({ body }) => {
-            expect(body.msg).toBe("Bad Request Body");
+            expect(body.msg).toBe("Bad Request");
           });
     })
 });

@@ -15,17 +15,16 @@ app.get("/api/articles/:article_id", selectArticlebyId)
 app.post("/api/articles/:article_id/comments", postComment)
 
 app.use((err, req, res, next) => {
-    console.log(err);
     const status = err.status || 500;
     const message = err.msg || "Internal Server Error";
     if (err.code === "22P02") {
         res.status(400).send({ msg: "Bad Request Invalid Article ID"})
-    } else {
-        if (err.code === "23502") {
+    } else if (err.code === "23502") {
             res.status(400).send({ msg: "Bad Request Body" })
         }
-    }
-    console.log(err, "ERROR")
+        else if (err.code === "23503") {
+            res.status(404).send({ msg: "Not Found"})
+        }
     res.status(status).send({ msg: message });
 })
 
