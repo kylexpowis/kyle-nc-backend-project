@@ -239,6 +239,23 @@ describe("/api/articles", () => {
 })
 });
 
+describe("DELETE: /api/comments/:comment_id", () => {
+    test('DELETE: 204 deletes the comment', () => {
+        return request(app)
+        .delete("/api/comments/1")
+        .expect(204);
+    });
+    test('DELETE: 404 sends an error if the comment ID isnt found', () => {
+        return request(app)
+        .delete("/api/comments/700")
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Not Found")
+        })
+    })
+})
+
+
 describe("/api/articles/:article_id", () => {
     test("PATCH: 200 updates the votes property of the specified article", () => {
         return request(app)
