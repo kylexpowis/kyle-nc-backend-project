@@ -11,6 +11,18 @@ exports.selectArticlebyId = (article_id) => {
     })
 }
 
+exports.postComment = (article_id, passedComment) => {
+    console.log( article_id )
+    const { username, body } = passedComment
+    return db.query(`INSERT INTO comments (article_id, author, body)
+    VALUES ($1, $2, $3)
+    RETURNING *;`,
+    [article_id, username, body])
+    .then(({ rows: [insertedComment] }) => {
+        return insertedComment;
+    });
+    }
+
 exports.selectCommentsByArticleId = (article_id) => {
     const queryString = `SELECT comment_id,
     votes,
@@ -43,3 +55,21 @@ exports.selectArticles = () => {
         return rows;
     });
 };
+
+
+exports.updateArticleVote = (article_id, inc_votes) => {
+    const queryString = `UPDATE articles
+    SET votes = votes + $2
+    WHERE article_id = $1
+    RETURNING *;`;
+    if (typeof inc_votes !== 'number') {
+        return Promise.reject({ status: 400, msg: "Bad Request"})
+    }
+    return db.query(queryString, [article_id, inc_votes]).then(({ rows }) => {
+        if (rows.length === 0) {
+            return Promise.reject({ status: 404, msg: "Article Not Found"});
+        }
+        return rows[0]
+    })
+} 
+
