@@ -15,5 +15,4 @@ exports.removeCommentById = (req, res, next) => {
 
 }
 
-}
 
