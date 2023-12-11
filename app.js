@@ -6,7 +6,10 @@ const { selectArticlebyId, getCommentsByArticleId, getArticles, updateArticleVot
 const endPoints = require("./endpoints.json");
 const { removeCommentById } = require("./controllers/comments.controllers");
 const app = express();
-app.use(express.json());
+
+const cors = require('cors');
+
+app.use(cors());
 
 app.use(express.json());
 
