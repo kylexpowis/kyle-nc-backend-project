@@ -25,5 +25,17 @@
         }
       ]
     }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "tickle122",
+          "name": "Tom Tickle",
+          "avatar_url": "http://www.avatar.com/tickle122.png"
+        }
+      ]
+    }
   }
 }

@@ -1,5 +1,6 @@
 const express = require("express");
 const { getTopics, getApi } = require("./controllers/topics.controllers");
+const { getUsers } = require("./controllers/users.controllers");
 
 const {
   selectArticlebyId,
@@ -24,6 +25,8 @@ app.get("/api", getApi);
 app.get("/api/topics", getTopics);
 
 app.get("/api/articles/:article_id", selectArticlebyId);
+
+app.get("/api/users", getUsers);
 
 app.post("/api/articles/:article_id/comments", postComment);
 
