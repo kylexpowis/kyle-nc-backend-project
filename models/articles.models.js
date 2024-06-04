@@ -71,5 +71,25 @@ exports.updateArticleVote = (article_id, inc_votes) => {
         }
         return rows[0]
     })
-} 
+};
 
+exports.fetchArticlesByTopic = async (topic) => {
+  const result = await db.query(
+    `
+    SELECT * FROM articles
+    WHERE topic = $1;
+  `,
+    [topic]
+  );
+  return result.rows;
+};
+
+exports.checkTopic = (topic) => {
+    return db.query('SELECT * FROM topics WHERE topic = $1', [topic])
+        .then((result) => {
+            if (!result.rows[0]) {
+                return Promise.reject({ status: 404, msg: `Not Found: topic '${topic}' does not exist.` });
+            }
+            return topic;
+        });
+};
